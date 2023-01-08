@@ -1,0 +1,11 @@
+Baseurl: https://api.themoviedb.org/3/
+
+Para utilizar a api, iremos precisar de alguns endpoints
+
+discover: /discover
+
+os parametros necessários são: api_key
+
+parametros que utilizarei: api_key, language
+
+url de imagens: https://image.tmdb.org/t/p/w500/
