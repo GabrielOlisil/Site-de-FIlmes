@@ -1,6 +1,13 @@
+import Discover from "../components/discover";
+import Navbar from "../components/navbar";
+
+
 function homePage(){
     return (
-        <div>oi {process.env.NEXT_PUBLIC_API_KEY}</div>
+        <>
+            <Navbar />
+            <Discover />
+        </>
     )
 }
 
