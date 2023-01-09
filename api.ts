@@ -19,10 +19,10 @@ export const API = {
 
         let filmes: DiscoverSearch = requisicao.data
 
-        filmes.results.forEach(async (filme) =>{
-            let requisicao = await httpClient.get(`/movie/${filme.id}?`)
+        await Promise.all(filmes.results.map(async (filme) =>{
+            let requisicao = await httpClient.get(`/movie/${filme.id}`)
             filme.informations = requisicao.data
-        });
+        }));
 
         return filmes;
     }
