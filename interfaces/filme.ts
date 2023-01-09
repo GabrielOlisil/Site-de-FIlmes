@@ -31,7 +31,7 @@ export interface FilmeInformations {
     backdrop_path: string | null;
     belongs_to_collection: {backdrop_path: null | string, id: number, name: string, poster_path: null | string} | null
     budget: number;
-    genre: Array<{id: number, name: string}>;
+    genres: Array<{id: number, name: string}>;
     homepage: string | null;
     id: number;
     imdb_id: string | null;
