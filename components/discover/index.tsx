@@ -3,6 +3,7 @@ import { API } from "../../api";
 import { DiscoverSearch, Filme } from "../../interfaces/filme";
 import styled from "styled-components";
 import { StyledTypes } from "../../interfaces/styledTypes";
+import { fileURLToPath } from "url";
 
 
 const IMAGE_PATH = "https://image.tmdb.org/t/p/w500";
@@ -11,41 +12,49 @@ const IMAGE_PATH = "https://image.tmdb.org/t/p/w500";
 
 
 const StyledDiscover = styled.main`
-    background-color: ${({theme}: StyledTypes) => theme.backgroundBase};
+    background-color: ${({ theme }: StyledTypes) => theme.backgroundBase};
 
 
     .discover-container {
         max-width: 1500px;
         margin: 0 auto;
 
-        .buttons {
-            max-width: fit-content;
-            margin: 0 auto;
-            display: flex;
-            gap: 1rem;
-            padding-top: 1rem;
-
-            button {
-
-                color: black;
-                background-color: ${({theme}: StyledTypes) => theme.accentColor};
-                border: 1px solid ${({theme}: StyledTypes) => theme.borderColor};
-                padding: 1em;
-
-            }
-        }
+        
+        
 
         article.discover-content {
+
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            
             .discover-card {
                 display: flex;
                 margin: 10px 0;
-                background-color: ${({theme}: StyledTypes) => theme.backgroundLevel1};
+                background-color: ${({ theme }: StyledTypes) => theme.backgroundLevel1};
                 color: white;
                 gap: 1rem;
 
-                h2 {
-                    font-size:3rem;
+                .discover-img{
+
+                    flex: 1;
+                    width: 100%;
+                    img {
+                        object-fit: contain;
+                    }
                 }
+
+                .discover-information {
+                    flex: 2;
+
+                    .tags-info{
+                        font-size: .8rem;
+                        color: ${({theme} : StyledTypes) => theme.accentColor};
+                        display: flex;
+                        gap: 1rem;
+                    }
+                }
+                
             }
         }
 
@@ -55,19 +64,19 @@ const StyledDiscover = styled.main`
 
 `;
 
-export default  function Discover(){
+export default function Discover() {
     const [filmes, setFilmes] = useState<Filme[]>();
     const [page, setPage] = useState<number>(1);
 
 
 
-    
-    const load = async ( ) => {
+
+    const load = async () => {
         const data: DiscoverSearch = await API.loadData(page);
-        const filmes: Filme[] =  data.results;
+        const filmes: Filme[] = data.results;
 
         const filmesFilter: Filme[] = filmes.filter((filme) => filme.backdrop_path);
-        
+
         setFilmes(filmesFilter);
     }
 
@@ -79,41 +88,45 @@ export default  function Discover(){
 
 
 
-    return(
+    return (
         <StyledDiscover>
             <div className="discover-container">
 
-                <div className="buttons">
-
-                    <button onClick={() =>{
-                        setPage(page - 1);
-                    }}>Página anterior</button>
-
-                    <button onClick={() =>{
-                        setPage(page +1);
-                    }}>Próxima página</button>
-
-                </div>
                 <article className="discover-content">
-                    {filmes && filmes.map((filme: Filme, key: number) =>{
+                    {filmes && filmes.map((filme: Filme, key: number) => {
                         return <div key={key}>
 
 
 
                             <div className="discover-card" >
-                                <img src={`${IMAGE_PATH}/${filme.poster_path}`} alt="" />
-                                <div>
+                                <div className="discover-img">
+                                    <img src={`${IMAGE_PATH}/${filme.poster_path}`} alt={`Poster do filme: ${filme.title}`} />
+                                </div>
+                                <div className="discover-information">
+                                
                                     <h2>
                                         {filme.title}
                                     </h2>
+                                    <div className="tags-info">
+                                        <span>
+
+                                            {filme.informations?.release_date}
+                                        </span>
+
+                                        <span className="tags">
+                                            {[...filme.informations?.genres].slice(0,3).map((genero, key) =>{
+                                                return <span key={key}>
+                                                    {genero.name}
+                                                </span>
+                                            })}
+                                        </span>
+                                    </div>
+                                    
                                     <div>
-                                        <span>rating</span>
-                                        <span>duration</span>
+                                        <span>Duração: {Math.floor(filme.informations?.runtime / 60)}h{Math.floor(filme.informations?.runtime % 60 )}m.</span>
                                     </div>
 
                                     <div className="discover-flex">
-                                        <p>{filme.overview}</p>
-
                                     </div>
 
                                 </div>
