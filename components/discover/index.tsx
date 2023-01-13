@@ -3,7 +3,6 @@ import { API } from "../../api";
 import { DiscoverSearch, Filme } from "../../interfaces/filme";
 import styled from "styled-components";
 import { StyledTypes } from "../../interfaces/styledTypes";
-import { fileURLToPath } from "url";
 
 
 const IMAGE_PATH = "https://image.tmdb.org/t/p/w500";
@@ -19,15 +18,15 @@ const StyledDiscover = styled.main`
         max-width: 1500px;
         margin: 0 auto;
 
-        
-        
+
+
 
         article.discover-content {
 
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 1rem;
-            
+
             .discover-card {
                 display: flex;
                 margin: 10px 0;
@@ -39,6 +38,7 @@ const StyledDiscover = styled.main`
 
                     flex: 1;
                     width: 100%;
+                    height: 100%;
                     img {
                         object-fit: contain;
                     }
@@ -52,13 +52,37 @@ const StyledDiscover = styled.main`
                         color: ${({theme} : StyledTypes) => theme.accentColor};
                         display: flex;
                         gap: 1rem;
+
+                        margin: 1em 0;
+
+                        .tags {
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: .3rem;
+
+
+                            .genre {
+                                color:  ${({theme}: StyledTypes) => theme.accentColor};
+                                border: 2px solid  ${({theme}: StyledTypes) => theme.accentColor};
+                                border-radius: .7rem;
+                                padding: 0 .5rem;
+
+                                &:hover {
+                                    border-color: #fcdb25;
+                                    background-color: #fcdb25;
+                                    color: black;
+                                    cursor: pointer;
+                                }
+                            }
+                        }
+
                     }
                 }
-                
+
             }
         }
 
-        
+
     }
 
 
@@ -88,8 +112,10 @@ export default function Discover() {
 
 
 
+
+
     return (
-        <StyledDiscover>
+        <StyledDiscover >
             <div className="discover-container">
 
                 <article className="discover-content">
@@ -103,9 +129,10 @@ export default function Discover() {
                                     <img src={`${IMAGE_PATH}/${filme.poster_path}`} alt={`Poster do filme: ${filme.title}`} />
                                 </div>
                                 <div className="discover-information">
-                                
+
                                     <h2>
                                         {filme.title}
+
                                     </h2>
                                     <div className="tags-info">
                                         <span>
@@ -115,13 +142,13 @@ export default function Discover() {
 
                                         <span className="tags">
                                             {[...filme.informations?.genres].slice(0,3).map((genero, key) =>{
-                                                return <span key={key}>
+                                                return <span key={key} className="genre">
                                                     {genero.name}
                                                 </span>
                                             })}
                                         </span>
                                     </div>
-                                    
+
                                     <div>
                                         <span>Duração: {Math.floor(filme.informations?.runtime / 60)}h{Math.floor(filme.informations?.runtime % 60 )}m.</span>
                                     </div>
