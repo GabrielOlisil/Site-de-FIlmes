@@ -1,3 +1,4 @@
+import {useEffect, useState} from "react";
 import { ThemeProvider } from "styled-components";
 import Discover from "../components/discover";
 import Navbar from "../components/navbar";
@@ -12,10 +13,27 @@ const theme: Theme = {
 }
 
 function homePage(){
+
+	const [page, setPage] = useState(1);
+    let pagina = 1;
+
+    const refreshONScroll = () =>{
+        if(document.body.getBoundingClientRect().bottom <= window.innerHeight){
+            pagina++;
+            setPage(pagina)
+        } 
+    }
+
+	useEffect(() =>{
+		window.addEventListener("scroll", refreshONScroll)
+	}, [])
+
+
+
     return (
         <ThemeProvider theme={theme}>
             <Navbar />
-            <Discover />
+            <Discover page={page} setPage={setPage}/>
         </ThemeProvider>
     )
 }

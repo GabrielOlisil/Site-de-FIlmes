@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { API } from "../../api";
 import { DiscoverSearch, Filme } from "../../interfaces/filme";
 import styled from "styled-components";
 import { StyledTypes } from "../../interfaces/styledTypes";
+import { type } from "os";
+import { stat } from "fs";
 
 
 const IMAGE_PATH = "https://image.tmdb.org/t/p/w500";
@@ -26,6 +28,17 @@ const StyledDiscover = styled.main`
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 1rem;
+            padding: 0 1rem;
+            @media (max-width: 1000px){
+                grid-template-columns: 1fr;
+                padding: 0 2rem;
+                gap: 0;
+
+            }
+            @media (max-width: 690px){
+                padding: 0 1rem;
+
+            }
 
             .discover-card {
                 display: flex;
@@ -88,38 +101,46 @@ const StyledDiscover = styled.main`
 
 `;
 
-export default function Discover() {
-    const [filmes, setFilmes] = useState<Filme[]>();
-    const [page, setPage] = useState<number>(1);
+export default function Discover({page, setPage}) {
+    
+    const initialState: Filme[] = []
+
+	const filmesReducer = (state: Filme[], action : Filme[]) => {
+
+        if(action){
+            
+            return [...state, ...action];
+        }
+        return state
+	}
+
+	const [state, dispatch] = useReducer(filmesReducer, initialState);
 
 
 
+	const load = async () => {
 
-    const load = async () => {
         const data: DiscoverSearch = await API.loadData(page);
-        const filmes: Filme[] = data.results;
+        const _filmes: Filme[] = data.results;
+		const newList: Filme[] = _filmes.filter((filme) => filme.backdrop_path);
 
-        const filmesFilter: Filme[] = filmes.filter((filme) => filme.backdrop_path);
-
-        setFilmes(filmesFilter);
+        dispatch(newList);
+		
     }
 
     useEffect(() => {
         load();
-        console.log(filmes)
     }, [page]);
-
-
 
 
 
 
     return (
         <StyledDiscover >
-            <div className="discover-container">
+			<div className="discover-container">
 
                 <article className="discover-content">
-                    {filmes && filmes.map((filme: Filme, key: number) => {
+                    {state && state.map((filme: Filme, key: number) => {
                         return <div key={key}>
 
 
