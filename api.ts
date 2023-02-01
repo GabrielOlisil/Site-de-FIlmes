@@ -4,7 +4,7 @@ import { DiscoverSearch, Filme } from "./interfaces/filme";
 const httpClient = axios.create({
     baseURL: "https://api.themoviedb.org/3/",
     params: {
-        api_key: process.env.NEXT_PUBLIC_API_KEY,
+        api_key: process.env.API_KEY,
         language: "pt-BR",
         watch_region: "pt-BR",
         sort_by: "popularity.desc",
@@ -13,6 +13,8 @@ const httpClient = axios.create({
 })
 
 export const API = {
+
+    
     loadData: async (page: number) => {
         httpClient.defaults.params.page = page;
         let requisicao = await httpClient.get("/discover/movie");

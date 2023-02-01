@@ -6,7 +6,8 @@ import { StyledTypes } from "../../interfaces/styledTypes";
 import Link from "next/link";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import 'react-lazy-load-image-component/src/effects/blur.css';
-import Image from "next/image";
+import Loading from "../utilities/loading";
+
 const IMAGE_PATH = "https://image.tmdb.org/t/p/w500";
 
 
@@ -27,7 +28,7 @@ const StyledDiscover = styled.main`
         article.discover-content {
 
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
             gap: 1rem;
             padding: 0 1rem;
             @media (max-width: 1200px){
@@ -117,7 +118,7 @@ const StyledDiscover = styled.main`
 `;
 
 export default function Discover({page, setPage}) {
-    let isLoading: boolean = false;
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     
     const initialState: Filme[] = []
 
@@ -135,14 +136,15 @@ export default function Discover({page, setPage}) {
 
 
 	const load = async () => {
-        isLoading = true;
-        const data: DiscoverSearch = await API.loadData(page);
+        setIsLoading(true)
+        const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/discover?page=${page}`);
+        const data: DiscoverSearch = await req.json();
+
         const _filmes: Filme[] = data.results;
 		const newList: Filme[] = _filmes.filter((filme) => filme.backdrop_path);
 
         dispatch(newList);
-        isLoading = false;
-		
+        setIsLoading(false)
     }
 
     useEffect(() => {
@@ -154,6 +156,7 @@ export default function Discover({page, setPage}) {
 
     return (
         <StyledDiscover >
+            {isLoading && <Loading />}
 			<div className="discover-container">
 
                 <article className="discover-content">
@@ -174,7 +177,7 @@ export default function Discover({page, setPage}) {
                                 <div className="discover-information">
 
                                     <h2>
-                                        <Link href={`/moovie/${filme.id}`} legacyBehavior>
+                                        <Link href={`/movie/${filme.id}`} legacyBehavior>
                                             <a >
 
                                             {filme.title}

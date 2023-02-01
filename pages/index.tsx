@@ -17,17 +17,7 @@ function homePage(){
 	const [page, setPage] = useState(1);
     let pagina = 1;
 
-    const refreshONScroll = () =>{
-        if(document.body.getBoundingClientRect().bottom <= window.innerHeight + 100){
-            pagina++;
-            setPage(pagina)
-        } 
-    }
-
-	useEffect(() =>{
-		window.addEventListener("scroll", refreshONScroll)
-	}, [])
-
+    
 
 
     return (
