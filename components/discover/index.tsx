@@ -3,9 +3,9 @@ import { API } from "../../api";
 import { DiscoverSearch, Filme } from "../../interfaces/filme";
 import styled from "styled-components";
 import { StyledTypes } from "../../interfaces/styledTypes";
-import { type } from "os";
-import { stat } from "fs";
-
+import Link from "next/link";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import 'react-lazy-load-image-component/src/effects/blur.css';
 
 const IMAGE_PATH = "https://image.tmdb.org/t/p/w500";
 
@@ -58,6 +58,16 @@ const StyledDiscover = styled.main`
                 }
 
                 .discover-information {
+                    h2 {
+                        cursor: pointer;
+                        span {
+                            color: white;
+                            &:hover{
+
+                                text-decoration: none;
+                            }
+                        }
+                    }
                     flex: 2;
 
                     .tags-info{
@@ -102,6 +112,7 @@ const StyledDiscover = styled.main`
 `;
 
 export default function Discover({page, setPage}) {
+    let isLoading: boolean = false;
     
     const initialState: Filme[] = []
 
@@ -119,12 +130,13 @@ export default function Discover({page, setPage}) {
 
 
 	const load = async () => {
-
+        isLoading = true;
         const data: DiscoverSearch = await API.loadData(page);
         const _filmes: Filme[] = data.results;
 		const newList: Filme[] = _filmes.filter((filme) => filme.backdrop_path);
 
         dispatch(newList);
+        isLoading = false;
 		
     }
 
@@ -132,7 +144,7 @@ export default function Discover({page, setPage}) {
         load();
     }, [page]);
 
-
+    
 
 
     return (
@@ -147,12 +159,23 @@ export default function Discover({page, setPage}) {
 
                             <div className="discover-card" >
                                 <div className="discover-img">
-                                    <img src={`${IMAGE_PATH}/${filme.poster_path}`} alt={`Poster do filme: ${filme.title}`} />
+                                    
+                                    
+                                    <LazyLoadImage src={`${IMAGE_PATH}/${filme.poster_path}`} alt={`Poster do filme: ${filme.title}`} effect="blur" 
+                                    />
+                                    
+
+
                                 </div>
                                 <div className="discover-information">
 
                                     <h2>
-                                        {filme.title}
+                                        <Link href={`/moovies/${filme.id}`}>
+                                            <span >
+
+                                            {filme.title}
+                                            </span>
+                                        </Link>
 
                                     </h2>
                                     <div className="tags-info">

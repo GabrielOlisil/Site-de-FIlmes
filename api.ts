@@ -1,5 +1,5 @@
 import axios from "axios";
-import { DiscoverSearch } from "./interfaces/filme";
+import { DiscoverSearch, Filme } from "./interfaces/filme";
 
 const httpClient = axios.create({
     baseURL: "https://api.themoviedb.org/3/",
@@ -25,5 +25,17 @@ export const API = {
         }));
 
         return filmes;
+    },
+
+    getMoovie: async (id: string) => {
+        
+        
+        let requisicao = await httpClient.get(`/movie/${id}`);
+
+        let filme: Filme = requisicao.data
+
+        
+
+        return  filme;
     }
 }
