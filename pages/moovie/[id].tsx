@@ -1,6 +1,6 @@
 
 import { API } from "../../api";
-import { DiscoverSearch, Filme } from "../../interfaces/filme";
+import { Filme } from "../../interfaces/filme";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 

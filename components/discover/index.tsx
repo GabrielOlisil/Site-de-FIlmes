@@ -6,7 +6,7 @@ import { StyledTypes } from "../../interfaces/styledTypes";
 import Link from "next/link";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import 'react-lazy-load-image-component/src/effects/blur.css';
-
+import Image from "next/image";
 const IMAGE_PATH = "https://image.tmdb.org/t/p/w500";
 
 
@@ -15,6 +15,7 @@ const IMAGE_PATH = "https://image.tmdb.org/t/p/w500";
 const StyledDiscover = styled.main`
     background-color: ${({ theme }: StyledTypes) => theme.backgroundBase};
 
+    
 
     .discover-container {
         max-width: 1500px;
@@ -29,7 +30,7 @@ const StyledDiscover = styled.main`
             grid-template-columns: repeat(2, 1fr);
             gap: 1rem;
             padding: 0 1rem;
-            @media (max-width: 1000px){
+            @media (max-width: 1200px){
                 grid-template-columns: 1fr;
                 padding: 0 2rem;
                 gap: 0;
@@ -45,30 +46,34 @@ const StyledDiscover = styled.main`
                 margin: 10px 0;
                 background-color: ${({ theme }: StyledTypes) => theme.backgroundLevel1};
                 color: white;
-                gap: 1rem;
+                gap: .5rem;
 
-                .discover-img{
+                div.discover-img{
 
-                    flex: 1;
-                    width: 100%;
-                    height: 100%;
-                    img {
+                    flex-shrink: 0;
+                    
+                    height: 24rem;
+                    padding: .3rem;
+
+                    .lazy-img {
                         object-fit: contain;
+                        height: 280;
+                        width: 420;
                     }
                 }
 
                 .discover-information {
                     h2 {
                         cursor: pointer;
-                        span {
+                        a {
                             color: white;
                             &:hover{
-
+                                color: #ffffffa4;
                                 text-decoration: none;
                             }
                         }
                     }
-                    flex: 2;
+                    
 
                     .tags-info{
                         font-size: .8rem;
@@ -161,8 +166,7 @@ export default function Discover({page, setPage}) {
                                 <div className="discover-img">
                                     
                                     
-                                    <LazyLoadImage src={`${IMAGE_PATH}/${filme.poster_path}`} alt={`Poster do filme: ${filme.title}`} effect="blur" 
-                                    />
+                                     <LazyLoadImage className="lazy-img" src={`${IMAGE_PATH}/${filme.poster_path}`} alt={`Poster do filme: ${filme.title}`} effect="blur" width="280" height="421" placeholderSrc={`${IMAGE_PATH}/${filme.poster_path}`} /> 
                                     
 
 
@@ -170,11 +174,11 @@ export default function Discover({page, setPage}) {
                                 <div className="discover-information">
 
                                     <h2>
-                                        <Link href={`/moovies/${filme.id}`}>
-                                            <span >
+                                        <Link href={`/moovie/${filme.id}`} legacyBehavior>
+                                            <a >
 
                                             {filme.title}
-                                            </span>
+                                            </a>
                                         </Link>
 
                                     </h2>
