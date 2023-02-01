@@ -18,7 +18,7 @@ function homePage(){
     let pagina = 1;
 
     const refreshONScroll = () =>{
-        if(document.body.getBoundingClientRect().bottom <= window.innerHeight){
+        if(document.body.getBoundingClientRect().bottom <= window.innerHeight + 100){
             pagina++;
             setPage(pagina)
         } 
